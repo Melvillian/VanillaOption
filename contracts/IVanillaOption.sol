@@ -22,16 +22,26 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IVanillaOption {
 
   event OptionMinted(
-
+    // TODO
   );
 
   event WriterExecuted(
-
+    // TODO
   );
 
   event BuyerExecuted(
-
+    // TODO
   );
+
+  // The option's underlying asset token may be an ERC20 (e.g. WBTC) or
+  // an NFT, so we need a way for the interface to tell the user which of
+  // these it is. Used in IVanillaOption.underlyingType
+  // TODO: figure out if it's possible to unite ERC20 and ERC1155 under a single type
+  // so we don't need this distinction
+  enum UnderlyingType {
+    ERC20,
+    ERC1155
+  }
 
   struct Series {
     uint256 expirationDate;
@@ -86,7 +96,7 @@ interface IVanillaOption {
   // - should this be non-binary? Could there be more than 1 state? If so, this should be a function
   // called state() that returns a uint8
   function isITM(uint256 id) view external returns (bool);
-  
+
   // returns the data about the option series at index id (e.g. expiration date, strike, cash settled or not, call or put, and description)
   // questions:
   // - same question as in getSettlementAmounts; should there be just 2 positions to take (buyer and writer)?
@@ -114,4 +124,8 @@ interface IVanillaOption {
   // returns true if the option at index is is cash settled, otherwise it's
   // physically settled, and returns false
   function isCashSettled(uint256 id) view external returns (bool);
+
+  // returns the type of ERC interface the underlying token asset supports
+  // currently one of ERC20 or ERC1155
+  function underlyingType(uint256) view external returns (UnderlyingType);
 }
